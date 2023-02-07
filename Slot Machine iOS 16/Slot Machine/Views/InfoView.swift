@@ -1,8 +1,4 @@
-//
-//  Created by Robert Petras
-//  Credo Academy ♥ Design and Code
-//  https://credo.academy
-//
+
 
 import SwiftUI
 
@@ -19,12 +15,6 @@ struct InfoView: View {
         Section(header: Text("About the application")) {
           FormRowView(firstItem: "Application", secondItem: "Slot Machine")
           FormRowView(firstItem: "Platforms", secondItem: "iPhone, iPad, Mac")
-          FormRowView(firstItem: "Developer", secondItem: "John / Jane")
-          FormRowView(firstItem: "Designer", secondItem: "Robert Petras")
-          FormRowView(firstItem: "Music", secondItem: "Dan Lebowitz")
-          FormRowView(firstItem: "Website", secondItem: "https://credo.academy")
-          FormRowView(firstItem: "Copyright", secondItem: "© All rights reserved.")
-          FormRowView(firstItem: "Version", secondItem: "1.5.1")
         }
       }
       .font(.system(.body, design: .rounded))
@@ -44,7 +34,6 @@ struct InfoView: View {
       , alignment: .topTrailing
       )
       .onAppear(perform: {
-        playSound(sound: "background-music", type: "mp3")
       })
   }
 }

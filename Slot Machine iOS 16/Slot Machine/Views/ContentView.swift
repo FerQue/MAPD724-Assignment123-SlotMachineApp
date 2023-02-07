@@ -1,13 +1,7 @@
-//
-//  Created by Robert Petras
-//  Credo Academy ♥ Design and Code
-//  https://credo.academy
-//  iOS 16
 
 import SwiftUI
 	
 struct ContentView: View {
-  // MARK: - PROPERTIES
   
   let symbols = ["gfx-bell", "gfx-cherry", "gfx-coin", "gfx-grape", "gfx-seven", "gfx-strawberry"]
   let haptics = UINotificationFeedbackGenerator()
@@ -23,32 +17,27 @@ struct ContentView: View {
   @State private var animatingSymbol: Bool = false
   @State private var animatingModal: Bool = false
   
-  // MARK: - FUNCTIONS
-  
   func spinReels() {
-    // reels[0] = Int.random(in: 0...symbols.count - 1)
-    // reels[1] = Int.random(in: 0...symbols.count - 1)
-    // reels[2] = Int.random(in: 0...symbols.count - 1)
+    
     reels = reels.map({ _ in
       Int.random(in: 0...symbols.count - 1)
     })
-    playSound(sound: "spin", type: "mp3")
     haptics.notificationOccurred(.success)
   }
   
   func checkWinning() {
     if reels[0] == reels[1] && reels[1] == reels[2] && reels[0] == reels[2] {
-      // PLAYER WINS
+    
       playerWins()
       
-      // NEW HIGHSCORE
+      
       if coins > highscore {
         newHighScore()
       } else {
-        playSound(sound: "win", type: "mp3")
+        
       }
     } else {
-      // PLAYER LOSES
+      
       playerLoses()
     }
   }
@@ -60,7 +49,7 @@ struct ContentView: View {
   func newHighScore() {
     highscore = coins
     UserDefaults.standard.set(highscore, forKey: "HighScore")
-    playSound(sound: "high-score", type: "mp3")
+    
   }
   
   func playerLoses() {
@@ -71,7 +60,7 @@ struct ContentView: View {
     betAmount = 20
     isActiveBet20 = true
     isActiveBet10 = false
-    playSound(sound: "casino-chips", type: "mp3")
+    
     haptics.notificationOccurred(.success)
   }
   
@@ -79,14 +68,14 @@ struct ContentView: View {
     betAmount = 10
     isActiveBet10 = true
     isActiveBet20 = false
-    playSound(sound: "casino-chips", type: "mp3")
+    
     haptics.notificationOccurred(.success)
   }
   
   func isGameOver() {
     if coins <= 0 {
       showingModal = true
-      playSound(sound: "game-over", type: "mp3")
+      
     }
   }
   
@@ -95,28 +84,21 @@ struct ContentView: View {
     highscore = 0
     coins = 100
     activateBet10()
-    playSound(sound: "chimeup", type: "mp3")
+    
   }
   
   // MARK: - BODY
   
   var body: some View {
     ZStack {
-      // MARK: - BACKGROUND
       
       LinearGradient(gradient: Gradient(colors: [Color("ColorPink"), Color("ColorPurple")]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
       
-      // MARK: - INTERFACE
-      
       VStack(alignment: .center, spacing: 5) {
-        
-        // MARK: - HEADER
         
         LogoView()
         
         Spacer()
-        
-        // MARK: - SCORE
         
         HStack {
           HStack {
@@ -145,11 +127,8 @@ struct ContentView: View {
           .modifier(ScoreContainerModifier())
         }
         
-        // MARK: - SLOT MACHINE
-        
         VStack(alignment: .center, spacing: 0) {
           
-          // MARK: - REEL #1
           ZStack {
             ReelView()
             Image(symbols[reels[0]])
@@ -160,12 +139,9 @@ struct ContentView: View {
               .animation(.easeOut(duration: Double.random(in: 0.5...0.7)), value: animatingSymbol)
               .onAppear(perform: {
                 self.animatingSymbol.toggle()
-                playSound(sound: "riseup", type: "mp3")
               })
           }
-          
           HStack(alignment: .center, spacing: 0) {
-            // MARK: - REEL #2
             ZStack {
               ReelView()
               Image(symbols[reels[1]])
@@ -181,7 +157,6 @@ struct ContentView: View {
             
             Spacer()
             
-            // MARK: - REEL #3
             ZStack {
               ReelView()
               Image(symbols[reels[2]])
@@ -197,25 +172,19 @@ struct ContentView: View {
           }
           .frame(maxWidth: 500)
           
-          // MARK: - SPIN BUTTON
           Button(action: {
-            // 1. SET THE DEFAULT STATE: NO ANIMATION
             withAnimation {
               self.animatingSymbol = false
             }
             
-            // 2. SPIN THE REELS WITH CHANGING THE SYMBOLS
             self.spinReels()
             
-            // 3. TRIGGER THE ANIMATION AFTER CHANGING THE SYMBOLS
             withAnimation {
               self.animatingSymbol = true
             }
             
-            // 4. CHECK WINNING
             self.checkWinning()
             
-            // 5. GAME IS OVER
             self.isGameOver()
           }) {
             Image("gfx-spin")
@@ -223,16 +192,13 @@ struct ContentView: View {
               .resizable()
               .modifier(ImageModifier())
           }
-        } // Slot Machine
+        }
           .layoutPriority(2)
-        
-        // MARK: - FOOTER
         
         Spacer()
         
         HStack {
           
-          // MARK: - BET 20
           HStack(alignment: .center, spacing: 10) {
             Button(action: {
               self.activateBet20()
@@ -254,7 +220,6 @@ struct ContentView: View {
           
           Spacer()
           
-          // MARK: - BET 10
           HStack(alignment: .center, spacing: 10) {
             Image("gfx-casino-chips")
               .resizable()
@@ -275,9 +240,8 @@ struct ContentView: View {
           }
         }
       }
-      // MARK: - BUTTONS
+        
       .overlay(
-        // RESET
         Button(action: {
           self.resetGame()
         }) {
@@ -288,7 +252,6 @@ struct ContentView: View {
         alignment: .topLeading
       )
       .overlay(
-        // INFO
         Button(action: {
           self.showingInfoView = true
         }) {
@@ -302,14 +265,11 @@ struct ContentView: View {
       .frame(maxWidth: 720)
       .blur(radius: $showingModal.wrappedValue ? 5 : 0, opaque: false)
       
-      // MARK: - POPUP
       if $showingModal.wrappedValue {
         ZStack {
           Color("ColorTransparentBlack").edgesIgnoringSafeArea(.all)
           
-          // MODAL
           VStack(spacing: 0) {
-            // TITLE
             Text("GAME OVER")
               .font(.system(.title, design: .rounded))
               .fontWeight(.heavy)
@@ -320,7 +280,6 @@ struct ContentView: View {
             
             Spacer()
             
-            // MESSAGE
             VStack(alignment: .center, spacing: 16) {
               Image("gfx-seven-reel")
                 .resizable()
@@ -370,14 +329,12 @@ struct ContentView: View {
         }
       }
       
-    } // ZStack
+    }
     .sheet(isPresented: $showingInfoView) {
       InfoView()
     }
   }
 }
-
-// MARK: - PREVIEW
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
